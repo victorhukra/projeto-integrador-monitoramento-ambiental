@@ -1,0 +1,141 @@
+NOME COMPLETO: Rafael Okano  
+PROJETO: Monitoramento Ambiental com Imagens de Satélite (Londrina-PR)  
+MÓDULO / GRUPO: Backend — Geração de Imagens de Satélite GOES
+
+## 1. RESPONSABILIDADES ASSUMIDAS
+
+Atuação no desenvolvimento do módulo responsável por gerar as imagens de satélite GOES de Londrina, a partir de um horário de referência informado pelo sistema.
+
+Também fui responsável por disponibilizar essas imagens por meio de um endpoint HTTP, definindo os parâmetros de entrada, os códigos de erro e o uso de cache, para que o Frontend possa exibi-las e para que possam ser usadas futuramente como entrada de um modelo de previsão de chuva.
+
+## 2. CONTRIBUIÇÕES REALIZADAS
+
+- Desenvolvimento do módulo que, dado um horário, identifica a varredura do satélite GOES correspondente;
+- Consulta do `image_link` no Supabase (tabela `dataset_weather_goes`) para descobrir qual varredura corresponde ao horário;
+- Extração do satélite (GOES-16 ou GOES-19) e do horário exato da varredura em UTC a partir do nome do arquivo;
+- Busca do arquivo do canal 13 (infravermelho "limpo", C13) no bucket público da NOAA no Amazon S3;
+- Download do arquivo NetCDF e leitura dos dados de temperatura de brilho (variável CMI);
+- Conversão de latitude e longitude para os ângulos de varredura da projeção do satélite geoestacionário;
+- Recorte da região de Londrina (área de 8 x 8 graus) na imagem completa do disco terrestre;
+- Conversão da temperatura em tons de cinza, ampliação da imagem e marcação da cidade com um círculo vermelho;
+- Implementação do cache de PNGs para evitar downloads e processamentos repetidos;
+- Criação do endpoint Flask `goes_image`, com validação do horário e tratamento padronizado de erros;
+- Documentação da explicação do código e do fluxo completo de geração da imagem.
+
+## 3. ARQUIVOS E TRECHOS DE CÓDIGO
+
+Minha contribuição direta de código concentrou-se no módulo de geração de imagem GOES e no endpoint Flask que o utiliza.
+
+As principais funções foram:
+
+- `_image_link(t)`: consulta o banco usando o horário informado, convertido para o fuso de São Paulo, e devolve o `image_link` da linha correspondente;
+- `_parse_link(link)`: lê o nome do arquivo do link e extrai o satélite e a hora da varredura em UTC;
+- `_find_key(bucket, scan)`: lista os arquivos do bucket da NOAA para o ano, dia do ano e hora da varredura e localiza o arquivo C13 mais próximo, com tolerância de até 2 minutos;
+- `_xy(lat, lon, proj)`: converte latitude e longitude em ângulos de varredura (x, y) usando a fórmula oficial do GOES-R;
+- `_render(nc_path, out_path)`: recorta a janela ao redor de Londrina, converte a temperatura em tons de cinza, amplia a imagem, marca a cidade e salva o PNG;
+- `get_goes_png(reference_time)`: coordena todo o processo, verificando o cache antes de baixar e gerar a imagem;
+- `goes_image()`: endpoint Flask que recebe o horário pela URL, chama o módulo e devolve o PNG.
+
+As constantes principais do módulo são:
+
+- `CACHE_DIR`: pasta `cache/goes`, onde os PNGs prontos ficam guardados;
+- `TZ`: fuso `America/Sao_Paulo`, usado na consulta ao banco;
+- `LAT`, `LON`, `HALF_DEG`: coordenadas de Londrina (-23.31, -51.16) e metade da largura da área recortada (4 graus para cada lado);
+- `BUCKETS`: relação entre o satélite (G16 ou G19) e o bucket público da NOAA (`noaa-goes16` ou `noaa-goes19`);
+- `_NAME_RE`: expressão regular que extrai o satélite e o horário de varredura do nome do arquivo;
+- `GoesImageError`: exceção própria para erros esperados, como imagem não encontrada ou nome inválido.
+
+## 4. INTEGRAÇÃO COM OUTROS MÓDULOS
+
+Atuei na integração entre o módulo de imagens GOES e os demais componentes do projeto.
+
+Com a equipe de Banco de Dados, utilizei a tabela `dataset_weather_goes` do Supabase, que relaciona cada horário do dataset ao `image_link` da varredura correspondente, garantindo que a imagem gerada esteja alinhada ao horário de cada registro.
+
+Com a equipe de Frontend, defini o endpoint `/goes-image`, o formato do parâmetro `reference_time` (ISO 8601 com fuso horário), o formato da resposta (PNG) e os códigos de erro retornados.
+
+Com a parte do projeto relacionada ao modelo de previsão, deixei as imagens preparadas para serem usadas futuramente como entrada de um modelo que combine dados meteorológicos e imagens de satélite.
+
+## 5. FLUXO TÉCNICO ACOMPANHADO
+
+O fluxo definido para a geração da imagem é:
+
+1. O cliente solicita `/goes-image?reference_time=...`;
+2. O endpoint valida o horário recebido;
+3. O módulo consulta o banco e obtém o `image_link` do horário;
+4. O `_parse_link` extrai o satélite e o horário da varredura;
+5. O módulo verifica se o PNG já existe no cache; se existir, devolve a imagem imediatamente;
+6. Se não existir, o `_find_key` localiza o arquivo C13 na NOAA;
+7. O arquivo NetCDF é baixado para uma pasta temporária;
+8. O `_render` recorta a região de Londrina, converte a temperatura em tons de cinza, marca a cidade e salva o PNG no cache;
+9. A pasta temporária é apagada automaticamente;
+10. O PNG é devolvido ao cliente com cache de navegador de 24 horas (`max_age=86400`).
+
+## 6. TESTES E VALIDAÇÕES ACOMPANHADOS
+
+- Validação do parâmetro `reference_time`: horário ausente, inválido ou sem fuso horário retorna HTTP 422 (`INVALID_REFERENCE_TIME`);
+- Tratamento de imagem não registrada no banco ou não encontrada na NOAA, com retorno HTTP 404 (`GOES_NOT_FOUND`);
+- Tratamento de falhas inesperadas (rede, banco, arquivo corrompido etc.), com retorno HTTP 503 (`GOES_UNAVAILABLE`);
+- Validação do nome do arquivo do `image_link` para identificar satélite e horário;
+- Verificação da busca do arquivo C13 mais próximo da varredura, com tolerância de até 2 minutos;
+- Verificação do funcionamento do cache, devolvendo o PNG existente sem novo processamento;
+- Verificação do recorte da região e da posição do marcador de Londrina na imagem;
+- Verificação da resposta de sucesso com o tipo `image/png` e o cabeçalho de cache.
+
+## 7. DIFICULDADES E SOLUÇÕES
+
+### Dificuldade 1: Descobrir qual varredura do satélite corresponde ao horário
+
+O horário escolhido pelo usuário precisava ser relacionado ao arquivo correto entre os muitos disponíveis no bucket da NOAA.
+
+Solução: utilização do `image_link` registrado na tabela `dataset_weather_goes` apenas para identificar o satélite e a hora da varredura, seguida da busca do arquivo C13 mais próximo, com tolerância de até 2 minutos.
+
+### Dificuldade 2: Recortar apenas a região de Londrina
+
+O arquivo do satélite contém o disco terrestre completo, e as coordenadas geográficas não correspondem diretamente aos pixels da imagem.
+
+Solução: implementação da função `_xy`, que converte latitude e longitude em ângulos de varredura da projeção geoestacionária, permitindo recortar a janela de 8 x 8 graus e posicionar o marcador da cidade.
+
+### Dificuldade 3: Representar a temperatura de forma visual
+
+Os dados do canal 13 são temperaturas de brilho, que precisavam ser transformadas em uma imagem interpretável.
+
+Solução: conversão da temperatura em tons de cinza em uma escala de 310 K a 190 K, deixando as nuvens altas, associadas a tempestades, brancas, e o solo ou nuvens baixas, mais escuros.
+
+### Dificuldade 4: Desempenho e repetição de downloads
+
+Baixar e processar o arquivo NetCDF a cada requisição seria lento e desnecessário.
+
+Solução: criação de um cache de PNGs na pasta `cache/goes`, uso de pasta temporária apagada automaticamente após o processamento e cache de navegador de 24 horas na resposta.
+
+### Dificuldade 5: Tratamento de erros e formato do horário na URL
+
+O endpoint precisava diferenciar erros do cliente, imagens inexistentes e falhas internas, e o sinal "+" do fuso horário na URL era interpretado como espaço.
+
+Solução: criação da exceção `GoesImageError`, uso dos códigos HTTP 422, 404 e 503 e orientação para codificar o sinal "+" como `%2B` em horários como `+03:00`.
+
+## 8. PAPEL
+
+Minha atuação concentrou-se no desenvolvimento do módulo de imagens de satélite, desde a identificação da varredura correta até a entrega do PNG ao cliente.
+
+Minhas principais atividades foram:
+
+- Desenvolver a lógica de busca e download dos dados GOES na NOAA;
+- Implementar o recorte, a conversão e a geração da imagem de Londrina;
+- Criar o endpoint de acesso às imagens e padronizar suas respostas de erro;
+- Implementar o cache para melhorar o desempenho;
+- Alinhar o formato dos dados com o banco de dados e o Frontend;
+- Documentar o código e o fluxo para continuidade do projeto.
+
+## 9. RESULTADO DA CONTRIBUIÇÃO
+
+O projeto passou a contar com uma estrutura capaz de:
+
+- Receber um horário de referência com fuso horário;
+- Identificar a varredura do satélite GOES correspondente;
+- Baixar o dado infravermelho da NOAA;
+- Gerar uma imagem de satélite recortada em Londrina, com a cidade marcada;
+- Reaproveitar imagens já geradas por meio do cache;
+- Devolver erros claros em caso de horário inválido, imagem inexistente ou falha de serviço;
+- Disponibilizar imagens alinhadas ao horário de cada registro do dataset, para exibição no sistema ou uso futuro como entrada de um modelo de previsão de chuva que combine dados meteorológicos e imagens.
+
+Minha contribuição envolveu tanto o desenvolvimento do processamento dos dados de satélite quanto a disponibilização desse resultado por meio de um endpoint documentado e integrável ao restante do sistema.
