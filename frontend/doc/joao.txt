@@ -9,4 +9,30 @@ JOÃO VICTOR CÂNDIDO VITOR
      tela.
    - Realizou pesquisas sobre bibliotecas específicas utilizadas no
      projeto, avaliando quais atendiam melhor às necessidades do
-     sistema.
+     sistema. 
+
+
+Dificuldades encontradas:
+
+   No início do projeto, a principal dificuldade foi pensar em uma
+   arquitetura para o sistema e definir como seria a comunicação com
+   os outros grupos, já que o front-end dependia do trabalho das
+   equipes de back-end e de banco de dados.
+ 
+   A maior dificuldade, porém, foi alinhar o time para realizar
+   reuniões e encontros de definição do escopo. Conciliar os horários
+   e a disponibilidade de todos os integrantes exigiu bastante
+   organização.
+ 
+   Além disso, houve muitos chamados dos outros grupos pedindo
+   alterações na interface, como cores, botões e outros ajustes
+   visuais. Como o integrante ficou responsável pela parte de
+   pesquisa e pela conversa com os demais membros e grupos, essas
+   demandas acabavam chegando primeiro até ele, que precisava
+   organizá-las e repassá-las à equipe.
+ 
+   Também surgiram dificuldades com algumas bibliotecas escolhidas no
+   início. Elas foram resolvidas ao longo do projeto, em conversa com
+   os integrantes que estavam mais envolvidos na codificação, que
+   sugeriram outras bibliotecas e algumas correções, como a adoção do
+   Leaflet para a exibição do mapa.
