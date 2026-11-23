@@ -2,48 +2,72 @@
 
 ## Visão geral
 
-O backend é uma API Flask servida por Gunicorn na porta 8000. Ele recebe horários de referência, consulta dados meteorológicos históricos no Supabase, prepara as entradas e calcula a probabilidade de chuva na próxima hora com o modelo v6. O resultado pode ser devolvido sem gravação ou salvo no histórico, conforme a rota usada.
-
-## Inicialização
-
-O `Dockerfile` instala as dependências, copia `app/`, `src/` e `config.py` para a imagem e inicia `app.main:app`. O pacote do modelo e o manifesto estão em `src/models/`; `MODEL_PATH` e `MODEL_MANIFEST_PATH` apontam para esses caminhos dentro do contêiner.
-
-Para executar localmente com Docker, copie `.env.example` para `.env`, preencha `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`, e execute:
-
-```sh
-docker build -t monitoramento-backend .
-docker run --env-file .env -p 8000:8000 monitoramento-backend
-```
-
-A chave `SUPABASE_SERVICE_ROLE_KEY` é privilegiada e deve ficar somente no ambiente do backend. Não publique o arquivo `.env`.
+O backend é uma API Flask executada em um container Docker. Ele consulta dados meteorológicos no Supabase, executa o modelo v6 e retorna ou grava previsões de chuva.
 
 ## Configuração
 
-`app/settings.py` carrega as variáveis de ambiente, usando o arquivo `.env` local quando ele existe. As variáveis configuram o pacote de modelo, acesso ao Supabase e a origem de navegador permitida pelo CORS. O modelo e o banco são opcionais para iniciar o processo, mas as rotas que dependem deles não ficam operacionais sem a configuração correspondente.
+Na raiz do projeto, copie o arquivo de exemplo:
 
-## Organização do código
+```powershell
+Copy-Item .env.example .env
+```
 
-- `app/controllers/`: rotas HTTP, validação de parâmetros e coordenação dos serviços.
-- `app/services/`: consulta e preparação dos dados meteorológicos, carregamento do modelo, disponibilidade e previsão.
-- `app/models/`: acesso ao Supabase e persistência do histórico.
-- `app/views/`: formato público das respostas e paginação.
-- `app/main.py`: criação da aplicação, configuração de CORS e tratamento de erros.
-- `src/models/`: adaptador, manifesto e pacote do modelo v6.
-- `sql/`: migração para proteger as operações de leitura e gravação do histórico.
+Preencha o `.env` (Não publique o arquivo `.env` nem a chave `SUPABASE_SERVICE_ROLE_KEY`).
+
+## Inicialização
+
+Na raiz do projeto:
+
+```powershell
+docker compose up --build -d
+```
+
+Verificar os containers:
+
+```powershell
+docker compose ps
+```
+
+Ver logs do backend:
+
+```powershell
+docker compose logs -f backend
+```
+
+A API fica disponível em `http://localhost:8000` e o Frontend em `http://localhost:5173`.
+
+Os caminhos do modelo são configurados automaticamente pelo `compose.yaml`.
 
 ## Rotas principais
 
-- `GET /health`: estado do modelo, do banco e da integração.
-- `GET /available-times`: período disponível; com `?date=AAAA-MM-DD`, lista horários válidos.
-- `GET /weather-inputs?reference_time=...`: consulta as entradas meteorológicas de um horário e da hora anterior.
-- `POST /internal/predict?reference_time=...`: calcula a previsão sem gravá-la.
-- `POST /predict`: calcula e grava uma previsão histórica; exige `Idempotency-Key` com UUID para evitar duplicatas.
-- `GET /predictions`: consulta histórico por intervalo de criação, com paginação por cursor.
-- `DELETE /predictions/<prediction_id>`: exclui um registro do histórico.
-- `GET /goes-image?reference_time=...`: obtém e renderiza a imagem GOES associada ao horário.
+```text
+GET  /health
+GET  /available-times
+GET  /weather-inputs?reference_time=...
+POST /predict
+GET  /predictions
+DELETE /predictions/<prediction_id>
+GET  /goes-image?reference_time=...
+```
 
-Os parâmetros de data/hora devem incluir fuso quando a rota exigir um instante. A API responde erros conhecidos com status HTTP e um código/mensagem em JSON.
+Exemplo de consulta no navegador:
 
-## Dependência do banco
+```text
+http://localhost:8000/health
+```
 
-As rotas meteorológicas, de previsão e histórico usam Supabase via PostgREST e a chave `service_role`. Para gravação/histórico, aplique a migração SQL em `sql/` ao projeto do banco antes de usar essas operações. O endpoint `/goes-image` também consulta o Supabase para localizar o arquivo de satélite e depois obtém os dados públicos da NOAA.
+## Fluxo de previsão
+
+1. O Frontend envia uma requisição ao Backend.
+2. O Backend valida o horário e consulta `T` e `T−1h`.
+3. O modelo v6 calcula a probabilidade de chuva.
+4. O resultado é devolvido e, em `/predict`, salvo no histórico.
+
+## Organização
+
+- `app/controllers/`: rotas e validações.
+- `app/services/`: regras de negócio e previsão.
+- `app/models/`: acesso ao Supabase.
+- `src/models/`: modelo v6 e manifesto.
+- `Dockerfile`: imagem do backend.
+- `sql/`: migração do histórico de previsões.
