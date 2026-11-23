@@ -78,7 +78,6 @@ Backend Flask + modelo v6
 
 - Python 3.13;
 - Flask;
-- Gunicorn;
 - scikit-learn;
 - Joblib;
 - NumPy;
@@ -168,7 +167,7 @@ Nunca envie `.env`, chaves de serviço ou credenciais ao controle de versão.
 Na raiz do repositório:
 
 ```powershell
-docker compose up -d --build
+docker compose up --build -d 
 ```
 
 Verifique os containers:
@@ -223,8 +222,6 @@ Exemplo:
 ```text
 http://localhost:8000/health
 ```
-
-Requisicoes de `/predict` exigem um UUID no cabecalho `Idempotency-Key`.
 
 
 ## Documentacao individual
