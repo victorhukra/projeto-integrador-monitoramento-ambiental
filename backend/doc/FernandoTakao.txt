@@ -1,0 +1,186 @@
+NOME COMPLETO: Fernando Takao Watanabe
+PROJETO: Monitoramento Ambiental com Imagens de Satélite (Londrina-PR)
+MÓDULO / GRUPO: Backend
+
+1. RESPONSABILIDADES ASSUMIDAS
+
+Atuei como integrante da equipe de Backend, sendo responsável principalmente pela integração do banco de dados Supabase e do Frontend com o Backend, pelo desenvolvimento dos endpoints da API REST e pela organização da arquitetura MVC.
+
+Também participei da estruturação do fluxo de comunicação entre os componentes da aplicação, garantindo que os dados meteorológicos pudessem ser consultados, que os resultados das previsões fossem armazenados e que o Frontend tivesse acesso às funcionalidades por meio de requisições HTTP.
+
+2. CONTRIBUIÇÕES REALIZADAS
+
+Minhas principais contribuições durante o desenvolvimento foram:
+
+- Integração do Backend com o Supabase por meio da API PostgREST;
+- Centralização das operações de acesso ao banco de dados em um repositório;
+- Desenvolvimento e organização dos endpoints da API REST;
+- Implementação das operações de consulta, gravação e exclusão de previsões;
+- Validação dos parâmetros recebidos nas requisições;
+- Padronização das respostas JSON e tratamento de erros;
+- Organização do Backend em controllers, models, views e services;
+- Implementação do mecanismo de idempotência para evitar previsões duplicadas;
+- Organização da consulta ao histórico com filtros por intervalo de tempo;
+- Implementação de paginação por cursor;
+- Preparação da comunicação entre Frontend, Backend e serviços de previsão.
+
+Essas implementações contribuíram para melhorar a organização do código, facilitar sua manutenção e permitir a integração entre os diferentes módulos do projeto.
+
+3. ARQUIVOS E CÓDIGO
+
+Minha contribuição direta concentrou-se principalmente nos seguintes arquivos:
+
+3.1. backend/app/models/weather_repository.py
+
+Responsável por centralizar a comunicação com o Supabase, utilizando a API PostgREST.
+
+As principais funcionalidades implementadas foram:
+
+- Consulta aos dados meteorológicos da tabela dataset_weather_goes;
+- Gravação, consulta e exclusão de previsões na tabela resultados_previsoes_ia;
+- Consulta de registros utilizando filtros;
+- Paginação dos resultados;
+- Verificação de registros existentes por chave de idempotência;
+- Tratamento das respostas retornadas pelo banco.
+
+3.2. backend/app/controllers/routes.py
+
+Responsável pela organização dos endpoints e pelo processamento das requisições HTTP.
+
+As principais atividades envolveram:
+
+- Definição e organização das rotas;
+- Validação dos parâmetros recebidos;
+- Comunicação com os serviços e o repositório;
+- Preparação das respostas JSON;
+- Definição dos códigos de status HTTP;
+- Tratamento de erros e requisições inválidas.
+
+4. ENDPOINTS DA API
+
+Os principais endpoints organizados e implementados foram:
+
+- GET /health: verifica o funcionamento do serviço Backend;
+- GET /available-times: consulta os períodos e horários disponíveis para previsões;
+- GET /weather-inputs: recupera as informações meteorológicas utilizadas pelo modelo;
+- POST /internal/predict: executa internamente o fluxo de previsão;
+- POST /predict: recebe solicitações de previsão e coordena a criação dos resultados;
+- GET /predictions: consulta o histórico de previsões, permitindo filtros e paginação;
+- DELETE /predictions/<prediction_id>: realiza a exclusão de uma previsão armazenada.
+
+Essas rotas permitem que o Frontend utilize as funcionalidades do sistema sem precisar acessar diretamente o banco de dados ou o modelo de inteligência artificial.
+
+5. INTEGRAÇÃO COM O BANCO DE DADOS
+
+Uma das minhas principais responsabilidades foi implementar a integração entre o Backend e o Supabase.
+
+A comunicação foi realizada por meio da API PostgREST, permitindo consultar os registros meteorológicos armazenados na tabela dataset_weather_goes e realizar operações de persistência na tabela resultados_previsoes_ia.
+
+Para organizar essa comunicação, centralizei as operações no arquivo weather_repository.py, separando o acesso ao banco das responsabilidades dos controllers.
+
+A URL e a chave de acesso ao Supabase foram obtidas por meio das configurações de ambiente do servidor.
+
+Também implementei o mecanismo de idempotência utilizando o cabeçalho Idempotency-Key. Esse recurso permite identificar requisições repetidas e evitar a criação de previsões duplicadas, incluindo o tratamento de possíveis conflitos entre requisições concorrentes.
+
+Outra funcionalidade foi a organização da consulta ao histórico de previsões, utilizando filtros por intervalo de tempo e paginação por cursor para recuperar os registros de maneira progressiva.
+
+6. ORGANIZAÇÃO MVC
+
+Participei da organização do Backend utilizando uma adaptação do padrão MVC para uma API REST.
+
+A estrutura foi dividida em:
+
+- Models (app/models/): responsáveis pelo acesso aos dados e pela comunicação com o Supabase;
+- Controllers (app/controllers/): responsáveis por receber requisições HTTP, validar parâmetros e coordenar os serviços;
+- Views (app/views/): responsáveis pela preparação e padronização das respostas JSON e dos cursores de paginação;
+- Services (app/services/): responsáveis pelas regras de negócio, incluindo disponibilidade dos horários, dados meteorológicos e execução das previsões.
+
+Essa separação permitiu organizar melhor as responsabilidades, reduzir o acoplamento entre os componentes e facilitar a manutenção da aplicação.
+
+7. INTEGRAÇÃO COM OUTROS MÓDULOS
+
+Minha atuação também envolveu a preparação da comunicação entre o Backend e os demais módulos do projeto.
+
+Frontend: organização dos endpoints, parâmetros das requisições e formatos das respostas JSON, permitindo consultar horários, solicitar previsões e acessar o histórico.
+
+Banco de Dados: integração com o Supabase para consultar os dados meteorológicos e persistir os resultados das previsões.
+
+Modelo de IA: organização das rotas responsáveis por encaminhar as solicitações aos serviços de previsão e disponibilizar os resultados processados.
+
+O Backend atua como intermediário entre esses componentes, centralizando a comunicação e o acesso aos dados.
+
+8. FLUXO TÉCNICO DA APLICAÇÃO
+
+O fluxo principal de previsão foi organizado da seguinte maneira:
+
+1. O usuário seleciona um horário no Frontend;
+2. O Frontend envia a solicitação ao Backend;
+3. O controller recebe e valida os parâmetros;
+4. O Backend consulta os dados meteorológicos no Supabase;
+5. Os serviços verificam os registros de T e T−1h e preparam as entradas;
+6. O serviço de previsão encaminha os dados ao modelo de IA;
+7. O modelo retorna a probabilidade estimada de chuva;
+8. O Backend valida e organiza o resultado;
+9. A previsão é armazenada no Supabase;
+10. O resultado é retornado ao Frontend e fica disponível no histórico.
+
+Minhas principais contribuições nesse fluxo envolveram a organização das rotas, a comunicação entre os componentes e a persistência dos dados.
+
+9. TESTES E VALIDAÇÕES
+
+As principais verificações relacionadas às funcionalidades desenvolvidas envolveram:
+
+- Funcionamento dos endpoints da API;
+- Validação dos parâmetros recebidos;
+- Consulta dos dados meteorológicos no Supabase;
+- Verificação das respostas JSON e dos códigos HTTP;
+- Tratamento de registros inexistentes e requisições inválidas;
+- Operações de gravação e exclusão de previsões;
+- Consulta ao histórico com filtros e paginação;
+- Funcionamento do mecanismo de idempotência;
+- Comunicação entre controllers, services e repository.
+
+Essas verificações contribuíram para identificar possíveis problemas de integração e melhorar a consistência das operações.
+
+10. DIFICULDADES E SOLUÇÕES
+
+10.1. Dificuldade 1: Integração com o Supabase
+
+Era necessário organizar as consultas e operações de persistência sem misturar o acesso ao banco com a lógica das rotas.
+
+Solução: centralização das operações no weather_repository.py, utilizando a API PostgREST.
+
+10.2. Dificuldade 2: Organização da arquitetura
+
+O desenvolvimento de diferentes funcionalidades poderia concentrar muitas responsabilidades nos mesmos arquivos.
+
+Solução: separação do Backend em controllers, models, views e services, mantendo cada componente responsável por uma parte específica da aplicação.
+
+10.3. Dificuldade 3: Requisições duplicadas
+
+O reenvio de uma solicitação poderia gerar previsões repetidas no banco de dados.
+
+Solução: utilização do cabeçalho Idempotency-Key, com consulta prévia dos registros e tratamento de possíveis conflitos de gravação.
+
+10.4. Dificuldade 4: Integração com o Frontend
+
+A comunicação entre os módulos exigia parâmetros e formatos de resposta padronizados.
+
+Solução: organização dos contratos da API, validação das requisições e padronização das respostas JSON e dos códigos HTTP.
+
+11. RESULTADOS DA CONTRIBUIÇÃO
+
+Minhas contribuições permitiram estruturar funcionalidades importantes para a integração e o funcionamento do Backend.
+
+Entre os principais resultados, destacam-se:
+
+- API REST organizada para comunicação com o Frontend;
+- Integração com o Supabase por meio de um repositório centralizado;
+- Operações de consulta, gravação e exclusão de previsões;
+- Organização do código utilizando uma adaptação do padrão MVC;
+- Padronização das respostas e tratamento de erros;
+- Prevenção de previsões duplicadas por meio de idempotência;
+- Consulta ao histórico com filtros e paginação;
+- Integração entre os diferentes componentes da aplicação.
+
+Minha participação concentrou-se principalmente no desenvolvimento da API, na integração com o banco de dados e na organização da arquitetura do Backend, contribuindo para a comunicação entre os módulos e para a manutenção das funcionalidades implementadas.
