@@ -20,6 +20,21 @@ services:
       timeout: 5s
       retries: 20
 
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      MODEL_PATH: ${MODEL_PATH:-/app/src/models/weather_ensemble.joblib}
+      MODEL_MANIFEST_PATH: ${MODEL_MANIFEST_PATH:-/app/src/models/manifest.json}
+      SUPABASE_URL: ${SUPABASE_URL:?Defina SUPABASE_URL no arquivo .env}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:?Defina SUPABASE_SERVICE_ROLE_KEY no arquivo .env}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:5173,http://127.0.0.1:5173}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      banco:
+        condition: service_healthy
+
   frontend:
     build:
       context: ./frontend
