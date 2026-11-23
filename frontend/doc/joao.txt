@@ -35,4 +35,4 @@ Dificuldades encontradas:
    início. Elas foram resolvidas ao longo do projeto, em conversa com
    os integrantes que estavam mais envolvidos na codificação, que
    sugeriram outras bibliotecas e algumas correções, como a adoção do
-   Leaflet para a exibição do mapa.
+   Leaflet para a exibição do mapa e utilização do React.
