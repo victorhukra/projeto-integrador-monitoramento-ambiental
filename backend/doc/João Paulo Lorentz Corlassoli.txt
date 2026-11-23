@@ -1,4 +1,4 @@
-NOME COMPLETO: João Paulo Lorentz Corlasoli
+NOME COMPLETO: João Paulo Lorentz Corlassoli
 PROJETO: Monitoramento Ambiental com Imagens de Satélite — Londrina/PR
 MÓDULO / GRUPO: Backend
 PAPEL: Desenvolvimento e gerenciamento do módulo de treinamento do modelo
@@ -218,5 +218,6 @@ O teste de paridade do empacotamento confirma que o adaptador reproduz as featur
 Minha contribuição esteve concentrada no gerenciamento e desenvolvimento do módulo de treinamento.
 
 Organizei os experimentos, acompanhei a preparação da base, participei do treinamento da v6, da validação temporal e da comparação dos modelos. Também participei da avaliação de calibração, pesos e limiares e preparei o artefato final junto de seu adaptador e manifesto.
+
 
 O resultado foi um ensemble documentado e empacotado, preparado para que o Backend da aplicação principal carregasse o modelo já treinado e realizasse inferências a partir de dados meteorológicos históricos.
