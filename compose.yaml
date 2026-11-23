@@ -1,0 +1,13 @@
+# Containers do projeto. Uso, na raiz do repositório:  docker compose up -d --build
+# Os valores vêm do arquivo .env da raiz (veja .env.example).
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:?Defina VITE_SUPABASE_URL no arquivo .env}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:?Defina VITE_SUPABASE_ANON_KEY no arquivo .env}
+    ports:
+      - "127.0.0.1:5173:80"
+    restart: unless-stopped

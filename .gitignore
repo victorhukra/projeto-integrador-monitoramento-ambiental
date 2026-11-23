@@ -1,0 +1,15 @@
+# Dependências e builds
+node_modules/
+dist/
+coverage/
+*.log
+
+# Variáveis de ambiente: só os exemplos vão para o Git
+.env
+.env.*
+!.env.example
+
+# Editores e sistema
+.vscode/
+.idea/
+.DS_Store
