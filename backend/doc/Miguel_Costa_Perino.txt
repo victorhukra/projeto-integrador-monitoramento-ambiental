@@ -1,0 +1,104 @@
+NOME COMPLETO: Miguel Costa Perino PROJETO: Monitoramento Ambiental com
+Imagens de Satélite (Londrina-PR) ATUAÇÃO: Suporte à equipe, Análise
+Exploratória de Dados (EDA) e Auditoria de Dados
+
+1. RESPONSABILIDADES ASSUMIDAS
+
+Atuei dando suporte aos integrantes da equipe durante o desenvolvimento
+do projeto, auxiliando no esclarecimento de dúvidas e nas atividades
+necessárias para o andamento das entregas.
+
+Também fui responsável por realizar a Análise Exploratória de Dados
+(EDA) e a auditoria dos dados utilizados no projeto, contribuindo para o
+entendimento das informações disponíveis e para a verificação de sua
+qualidade e consistência.
+
+Além disso, participei da validação das entregas quando necessário,
+verificando se os resultados apresentados estavam de acordo com o que
+havia sido solicitado e identificando possíveis pontos que precisavam de
+ajustes.
+
+2. CONTRIBUIÇÕES REALIZADAS
+
+-   Prestação de suporte aos integrantes da equipe conforme as
+    necessidades identificadas ao longo do projeto;
+-   Realização da Análise Exploratória de Dados (EDA);
+-   Investigação e compreensão das características dos dados disponíveis
+    para o projeto;
+-   Análise da estrutura dos conjuntos de dados e de suas principais
+    variáveis;
+-   Auditoria dos dados, com foco na verificação de qualidade,
+    consistência e possíveis problemas;
+-   Identificação de possíveis inconsistências ou situações que mereciam
+    atenção durante a preparação e utilização dos dados;
+-   Apoio à equipe na interpretação dos dados e dos resultados das
+    análises;
+-   Validação de entregas quando necessário, verificando sua adequação
+    aos requisitos e às definições do projeto;
+-   Comunicação de observações e pontos de melhoria identificados
+    durante as análises e validações;
+-   Colaboração com os demais integrantes para contribuir com a
+    continuidade e a qualidade do desenvolvimento.
+
+3. ANÁLISE EXPLORATÓRIA DE DADOS (EDA)
+
+A Análise Exploratória de Dados teve como objetivo compreender melhor os
+dados disponíveis para o projeto antes de sua utilização nas demais
+etapas.
+
+Durante essa atividade, minha atuação esteve direcionada à investigação
+das informações, à observação de suas características e à identificação
+de aspectos relevantes para a equipe.
+
+A EDA contribuiu para:
+
+-   Compreender a estrutura e o conteúdo dos dados;
+-   Observar a distribuição e o comportamento das variáveis;
+-   Identificar padrões, variações e características relevantes;
+-   Verificar a presença de valores ausentes ou possíveis
+    inconsistências;
+-   Levantar pontos de atenção que poderiam impactar as etapas seguintes
+    do projeto;
+-   Fornecer uma visão mais clara dos dados para apoiar as decisões da
+    equipe.
+
+4. AUDITORIA DOS DADOS
+
+Também realizei a auditoria dos dados utilizados no projeto, buscando
+verificar se as informações apresentavam condições adequadas para serem
+consideradas nas etapas de análise e desenvolvimento.
+
+Essa atividade envolveu a observação da integridade e da consistência
+dos registros, além da identificação de possíveis problemas que
+precisariam ser avaliados pela equipe.
+
+A auditoria teve como objetivos:
+
+-   Verificar a consistência das informações disponíveis;
+-   Identificar possíveis valores ausentes, inválidos ou discrepantes;
+-   Observar problemas de estrutura ou preenchimento dos registros;
+-   Sinalizar situações que poderiam comprometer a interpretação ou
+    utilização dos dados;
+-   Apoiar a equipe na avaliação da confiabilidade das informações
+    utilizadas no projeto.
+
+5. SUPORTE À EQUIPE E VALIDAÇÃO DAS ENTREGAS
+
+Ao longo do desenvolvimento, também atuei oferecendo suporte aos
+integrantes da equipe de acordo com as demandas que surgiam.
+
+Quando necessário, participei da validação das entregas, analisando o
+que havia sido desenvolvido e verificando sua conformidade com os
+objetivos e requisitos definidos para o projeto.
+
+Minha participação nessa etapa incluiu:
+
+-   Auxílio aos integrantes diante de dúvidas e necessidades
+    relacionadas ao projeto;
+-   Apoio na análise de problemas identificados durante o
+    desenvolvimento;
+-   Verificação das entregas quando solicitado ou necessário;
+-   Identificação e comunicação de ajustes ou pontos que precisavam ser
+    revisados;
+-   Colaboração para manter o alinhamento entre as atividades realizadas
+    e os objetivos do projeto.
