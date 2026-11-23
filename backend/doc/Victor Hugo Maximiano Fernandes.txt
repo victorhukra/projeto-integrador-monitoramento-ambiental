@@ -1,0 +1,143 @@
+NOME COMPLETO: Victor Hugo Maximiano Fernandes  
+PROJETO: Monitoramento Ambiental com Imagens de Satélite (Londrina-PR)  
+MÓDULO / GRUPO: Backend — Líder da Equipe
+
+## 1. RESPONSABILIDADES ASSUMIDAS
+
+Atuação como líder da equipe de Backend, responsável por organizar as atividades, distribuir demandas, acompanhar o andamento das tarefas e manter a comunicação com as equipes de Banco de Dados e Frontend.
+
+Também fui responsável por acompanhar as decisões técnicas relacionadas à integração da API, ao funcionamento do modelo de previsão e à preparação do Backend para execução em diferentes ambientes.
+
+## 2. CONTRIBUIÇÕES REALIZADAS
+
+- Organização geral das atividades e prioridades da equipe de Backend;
+- Distribuição de tarefas entre os integrantes e acompanhamento das entregas;
+- Definição e acompanhamento do fluxo entre Frontend, Backend, modelo de IA e banco de dados;
+- Participação na definição das rotas e dos contratos da API;
+- Desenvolvimento e refatoração dos principais serviços responsáveis pelas regras de negócio;
+- Implementação e validação das regras relacionadas ao instante T e ao horário T−1h;
+- Validação das entradas meteorológicas antes da execução do modelo;
+- Preparação do fluxo para consulta das variáveis meteorológicas no Supabase;
+- Organização do serviço de previsão e validação dos resultados retornados pelo modelo;
+- Acompanhamento da integração do modelo v6 ao Backend;
+- Organização da documentação técnica utilizada para orientar as equipes;
+- Preparação do Backend para integração com o Frontend e execução em ambiente Docker;
+- Acompanhamento dos testes da API, do banco de dados e do fluxo de previsão.
+
+## 3. ARQUIVOS E TRECHOS DE CÓDIGO
+
+Minha contribuição direta de código concentrou-se principalmente nos serviços localizados em:
+
+```text
+backend/app/services/
+```
+
+Os principais arquivos foram:
+
+- `weather_service.py`: valida o horário de referência, consulta os registros de T e T−1h e prepara as entradas meteorológicas;
+- `prediction_service.py`: envia os dados ao modelo e valida a probabilidade, a classificação e a versão retornada;
+- `availability_service.py`: identifica os horários que possuem os registros necessários para realizar uma previsão;
+- `model_service.py`: participa do fluxo de carregamento e validação do modelo empacotado.
+
+Também acompanhei a organização dos arquivos relacionados às rotas, ao repositório de acesso ao banco, às configurações e à integração geral da aplicação.
+
+## 4. INTEGRAÇÃO COM OUTROS MÓDULOS
+
+Atuei como ponto focal da equipe de Backend na comunicação com os demais grupos.
+
+Com o integrante Fernarndo Takao, alinhei a organização das rotas, os parâmetros recebidos pela API, os formatos das respostas e o fluxo de comunicação entre Frontend e Backend.
+
+Com o integrante João Corlassoli, acompanhei as decisões relacionadas ao carregamento, à validação e à utilização do modelo v6, incluindo a ordem das features, a probabilidade retornada e a classificação final da previsão.
+
+Também mantive o alinhamento com a equipe de Banco de Dados para garantir que o Backend consultasse corretamente os registros meteorológicos, utilizasse T e T−1h e persistisse os resultados conforme o contrato definido.
+
+## 5. FLUXO TÉCNICO ACOMPANHADO
+
+O fluxo definido para o Backend é:
+
+1. O usuário escolhe um horário no Frontend;
+2. O Frontend envia o horário de referência ao Backend;
+3. O Backend consulta os dados de T e T−1h no banco;
+4. O `weather_service.py` valida os horários e as variáveis meteorológicas;
+5. O `prediction_service.py` envia os dados ao modelo v6;
+6. O modelo calcula a probabilidade de chuva;
+7. O Backend valida o resultado;
+8. A previsão é gravada no banco;
+9. O resultado é devolvido ao Frontend;
+10. A previsão pode posteriormente ser consultada no histórico.
+
+## 6. TESTES E VALIDAÇÕES ACOMPANHADOS
+
+- Verificação das rotas principais da API;
+- Testes de consulta dos registros de T e T−1h;
+- Validação de horários inválidos ou inexistentes;
+- Validação de dados meteorológicos ausentes ou inválidos;
+- Testes do carregamento e da versão do modelo;
+- Testes do cálculo e da classificação da probabilidade;
+- Testes do mecanismo de reenvio utilizando `Idempotency-Key`;
+- Testes de persistência das previsões no Supabase;
+- Testes de consulta do histórico;
+- Verificação da comunicação entre Backend, Banco de Dados e Frontend;
+- Acompanhamento da preparação do Backend para execução em Docker.
+
+## 7. DIFICULDADES E SOLUÇÕES
+
+### Dificuldade 1: Complexidade inicial do projeto
+
+O projeto envolvia dados meteorológicos, imagens GOES, modelo de IA, banco de dados e integração com o Frontend.
+
+Solução: ajudamos a reduzir o escopo inicial para um MVP baseado nos dados meteorológicos tabulares, deixando as imagens de satélite para uma etapa posterior.
+
+### Dificuldade 2: Organização das responsabilidades
+
+Havia risco de misturar consultas ao banco, regras de negócio e execução do modelo no mesmo arquivo.
+
+Solução: organização do Backend em Controllers, Services, Repository e Model Adapter, deixando cada componente com uma responsabilidade específica.
+
+### Dificuldade 3: Validação do instante T
+
+Era necessário garantir que as entradas utilizadas correspondessem ao mesmo horário escolhido e que a pressão anterior fosse exatamente de T−1h.
+
+Solução: implementação das regras no `weather_service.py`, com validação do fuso horário, existência dos registros, duplicidades e valores inválidos.
+
+### Dificuldade 4: Requisições duplicadas
+
+Um clique duplo ou reenvio poderia gerar duas previsões iguais no banco.
+
+Solução: utilização do cabeçalho `Idempotency-Key`, consulta prévia do registro e tratamento da restrição única do banco.
+
+### Dificuldade 5: Comunicação entre as equipes
+
+As equipes dependiam de contratos claros para integrar o sistema.
+
+Solução: participação na definição das rotas, exemplos de requisição e resposta, mensagens de erro e responsabilidades de cada módulo.
+
+## 8. PAPEL 
+
+Além da contribuição direta no código, atuei na coordenação técnica da equipe de Backend.
+
+Minhas principais atividades foram:
+
+- Distribuir tarefas;
+- Acompanhar o progresso dos integrantes;
+- Revisar as decisões técnicas;
+- Centralizar dúvidas e pendências;
+- Alinhar o Backend com o Banco de Dados e o Frontend;
+- Garantir que as implementações seguissem os contratos definidos;
+- Organizar a documentação necessária para continuidade do projeto;
+- Identificar riscos de integração e encaminhar soluções.
+
+## 9. RESULTADO DA CONTRIBUIÇÃO
+
+A equipe de Backend passou a contar com uma estrutura organizada para:
+
+- Receber uma solicitação de previsão;
+- Buscar e validar os dados meteorológicos;
+- Executar o modelo v6;
+- Retornar uma probabilidade de chuva;
+- Persistir o resultado no banco;
+- Evitar previsões duplicadas;
+- Disponibilizar o histórico para o Frontend;
+- Executar a aplicação de forma mais reproduzível.
+
+Minha contribuição envolveu tanto o desenvolvimento dos serviços quanto a liderança, organização e integração das atividades necessárias para transformar as decisões do projeto em um fluxo funcional de Backend.
