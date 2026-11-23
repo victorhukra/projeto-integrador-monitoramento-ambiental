@@ -1,6 +1,0 @@
-# Variaveis de ambiente reais e segredos
-.env
-
-# Arquivos temporarios do SO
-.DS_Store
-Thumbs.db

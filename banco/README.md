@@ -5,9 +5,7 @@ Camada de banco de dados relacional (PostgreSQL 15) do Projeto Integrador — **
 ## Estrutura
 
 ```text
-.
-├── compose.yaml                      # Orquestração Docker do container PostgreSQL 15
-├── .env.example                      # Modelo de variáveis de ambiente (copiar para .env)
+banco/
 ├── init/
 │   ├── 01_schema.sql                 # DDL completo (3 tabelas, 1 view, 6 índices, RLS)
 │   └── 02_dados.sql                  # Carga inicial real (792 registros horários + amostras)
@@ -21,12 +19,12 @@ Camada de banco de dados relacional (PostgreSQL 15) do Projeto Integrador — **
 └── COMANDOS_DOCKER_AVALIACAO.md      # Guia de comandos para execução e testes em Docker
 ```
 
-## Execução com Docker Compose
+## Execução com Docker Compose (na raiz do repositório)
 
-```bash
-git clone https://github.com/projeto-monitoramento-ambiental/banco.git
-cd banco
-cp .env.example .env
+```powershell
+git clone https://github.com/victorhukra/projeto-integrador-monitoramento-ambiental.git
+cd projeto-integrador-monitoramento-ambiental
+Copy-Item .env.example .env
 docker compose up -d banco
 ```
 

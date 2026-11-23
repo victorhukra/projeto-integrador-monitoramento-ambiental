@@ -202,6 +202,38 @@ Para interromper e apagar os dados locais persistidos:
 docker compose down -v
 ```
 
+## Banco de Dados (PostgreSQL 15)
+
+Para subir apenas o container do banco (sem precisar preencher chaves do Supabase no `.env`):
+
+```powershell
+docker compose up -d banco
+```
+
+Quando o volume `postgres_data` nasce vazio, o PostgreSQL executa automaticamente os scripts de `banco/init/`:
+
+- `01_schema.sql`: cria as 3 tabelas (`dataset_weather_goes`, `caracteristicas_goes_stat` e `resultados_previsoes_ia`), a view `clima_atual`, os 6 índices B-Tree (incluindo `idx_weather_goes_time_unique` e `idx_previsoes_session_created`) e as políticas de RLS;
+- `02_dados.sql`: popula 792 registros horários reais de Londrina, estatísticas de referência GOES-16 e 3 previsões iniciais do modelo v6. Para carga completa das 59.160 horas localmente, consulte `banco/scripts/importar_dataset_completo.sql`.
+
+Acesso interativo via `psql`:
+
+```powershell
+docker compose exec banco psql -U postgres -d projeto_integrador
+```
+
+Consultas rápidas de validação no `psql`:
+
+```sql
+\dt
+\dv
+SELECT count(*) FROM dataset_weather_goes;
+SELECT * FROM clima_atual;
+SELECT reference_time, temperature_2m, rain_probability, rain_predicted FROM resultados_previsoes_ia;
+\q
+```
+
+Mais comandos de avaliação (incluindo `EXPLAIN ANALYZE` e teste de persistência) estão em `banco/COMANDOS_DOCKER_AVALIACAO.md`.
+
 ## API
 
 Rotas principais:
