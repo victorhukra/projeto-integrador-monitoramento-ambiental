@@ -1,6 +1,25 @@
 # Containers do projeto. Uso, na raiz do repositório:  docker compose up -d --build
 # Os valores vêm do arquivo .env da raiz (veja .env.example).
 services:
+  banco:
+    image: postgres:15
+    container_name: postgres_monitoramento_londrina
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-projeto_integrador}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres123}
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./banco/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-projeto_integrador}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   frontend:
     build:
       context: ./frontend
@@ -11,3 +30,6 @@ services:
     ports:
       - "127.0.0.1:5173:80"
     restart: unless-stopped
+
+volumes:
+  postgres_data:
