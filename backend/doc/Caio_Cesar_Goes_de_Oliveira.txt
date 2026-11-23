@@ -1,0 +1,122 @@
+NOME COMPLETO: Caio Cesar Goes de Oliveira
+PROJETO: Monitoramento Ambiental com Imagens de Satélite (Londrina-PR)
+MÓDULO / GRUPO: Integração de imagens GOES (Backend e Frontend)
+
+## 1. RESPONSABILIDADES ASSUMIDAS
+
+Atuação na integração do recurso de visualização de imagens do satélite GOES ao projeto de monitoramento ambiental, conectando o serviço responsável pela obtenção e processamento da imagem ao Backend e à interface Frontend.
+
+Também fui responsável por expor a funcionalidade ao Frontend por meio da rota `/goes-image`, registrada no arquivo `backend/app/main.py`, e por validar o funcionamento da integração em ambiente Docker.
+
+## 2. CONTRIBUIÇÕES REALIZADAS
+
+- Integração do recurso de imagens GOES à aplicação de monitoramento ambiental;
+- Implementação e integração do serviço Backend responsável por obter e processar as imagens de satélite;
+- Criação e integração da rota `/goes-image` ao `backend/app/main.py`, recebendo o horário de referência e retornando a imagem processada em PNG ao Frontend;
+- Tratamento do horário de referência enviado na requisição, incluindo validação do formato de data e hora com fuso horário;
+- Integração da consulta às imagens GOES disponibilizadas pela fonte NOAA;
+- Processamento dos dados da imagem para geração e retorno de arquivo PNG;
+- Integração do componente Frontend responsável por exibir a imagem GOES;
+- Conexão da visualização de satélite à área de previsão experimental;
+- Ajustes na integração entre Backend e Frontend;
+- Organização e envio das alterações para a branch compartilhada `organizacao_codigo`.
+
+## 3. ARQUIVOS E TRECHOS DE CÓDIGO
+
+Minha contribuição direta de código concentrou-se principalmente nos seguintes arquivos:
+
+```text
+backend/app/
+frontend/src/
+```
+
+Os principais arquivos foram:
+
+- `backend/app/main.py`: registro da rota `/goes-image` na aplicação Flask. A rota recebe o horário de referência na requisição, valida o formato de data e hora com fuso horário (ex.: `2026-09-10T12:00:00-03:00`), aciona o `goes_service.py` e retorna a imagem com status HTTP 200 e tipo de conteúdo `image/png`;
+- `backend/app/goes_service.py`: serviço responsável por obter os dados da imagem GOES na NOAA, processá-los e gerar a imagem PNG;
+- `frontend/src/components/GoesImage.jsx`: componente Frontend responsável pelo consumo da rota e pela exibição da imagem GOES;
+- `frontend/src/components/PrevisaoExperimental.jsx`: integração da imagem de satélite à funcionalidade de previsão experimental;
+- `frontend/src/styles.css`: ajustes de estilo relacionados à interface;
+- `frontend/src/App.test.jsx`: atualização dos testes relacionados às alterações da interface.
+
+## 4. INTEGRAÇÃO COM OUTROS MÓDULOS
+
+A integração exigiu comunicação entre o Backend e o Frontend para que a imagem de satélite pudesse ser solicitada pelo sistema e exibida na interface.
+
+No Backend, o `main.py` funciona como ponto de entrada da funcionalidade GOES: expõe a rota `/goes-image` ao Frontend e delega ao `goes_service.py` o acesso à NOAA e o processamento da imagem. A rota foi incorporada sem interferir no fluxo já existente da aplicação, mantendo a separação entre a camada de rotas e a camada de serviço.
+
+No Frontend, o componente `GoesImage.jsx` utiliza o recurso disponibilizado pelo Backend e apresenta a imagem na área de previsão experimental, conectando a funcionalidade à interface existente.
+
+## 5. FLUXO TÉCNICO IMPLEMENTADO
+
+O fluxo da integração é:
+
+1. O usuário acessa a funcionalidade de previsão experimental no Frontend;
+2. A interface utiliza o horário de referência selecionado;
+3. O Frontend solicita a imagem GOES ao Backend pela rota `/goes-image`, registrada no `main.py`;
+4. O Backend valida o horário de referência recebido;
+5. O serviço `goes_service.py` consulta os dados de imagem disponibilizados pela NOAA;
+6. O serviço processa os dados e gera uma imagem PNG;
+7. O Backend retorna a imagem ao Frontend;
+8. O componente `GoesImage.jsx` exibe a imagem na interface.
+
+## 6. TESTES E VALIDAÇÕES REALIZADOS
+
+- Verificação da compilação dos arquivos Python, incluindo o `main.py`, com `py_compile`;
+- Verificação da existência e do registro da rota `/goes-image` na aplicação Flask;
+- Teste da requisição ao endpoint com horário de referência válido e fuso horário;
+- Validação do retorno HTTP 200 e do tipo de conteúdo `image/png`;
+- Download e abertura da imagem PNG retornada pelo Backend;
+- Verificação da exibição da imagem GOES no Frontend;
+- Verificação da integração na tela de previsão experimental;
+- Inicialização e validação dos serviços da aplicação por meio do Docker Compose.
+
+## 7. DIFICULDADES E SOLUÇÕES
+
+### Dificuldade 1: Integração de uma fonte de imagens de satélite ao sistema
+
+Foi necessário conectar o projeto a uma fonte externa de imagens GOES e adequar o retorno para utilização pela aplicação.
+
+Solução: implementação de um serviço Backend específico para buscar e processar os dados, retornando a imagem em formato PNG.
+
+### Dificuldade 2: Comunicação entre Backend e Frontend
+
+A imagem precisava ser disponibilizada por uma rota que pudesse ser consumida pela interface sem interferir no fluxo já existente.
+
+Solução: criação e registro do endpoint `/goes-image` no `main.py` e do componente `GoesImage.jsx`, incorporando a visualização à previsão experimental.
+
+### Dificuldade 3: Formato do horário de referência
+
+A rota exige que o horário enviado seja válido e contenha informação de fuso horário.
+
+Solução: validação do parâmetro de data e hora e realização dos testes utilizando timestamp ISO com offset, como `2026-09-10T12:00:00-03:00`.
+
+### Dificuldade 4: Validação da integração no ambiente de execução
+
+Era necessário verificar se o serviço Backend retornava a imagem corretamente e se a interface conseguia exibi-la.
+
+Solução: testes diretos do endpoint, salvamento e abertura da imagem retornada e validação visual da funcionalidade no Frontend com os serviços executando via Docker.
+
+## 8. PAPEL NA INTEGRAÇÃO DO PROJETO
+
+Além da contribuição direta no código, atuei na integração entre as camadas do sistema.
+
+Minhas principais atividades foram:
+
+- Implementar o serviço Backend de obtenção e processamento das imagens GOES;
+- Expor a funcionalidade por meio da rota `/goes-image` no `main.py`;
+- Integrar o componente Frontend à área de previsão experimental;
+- Testar a rota, o retorno da imagem e a apresentação da funcionalidade na interface;
+- Preparar e enviar as alterações para compartilhamento com a equipe por meio da branch `organizacao_codigo`.
+
+## 9. RESULTADO DA CONTRIBUIÇÃO
+
+A integração passou a disponibilizar ao sistema:
+
+- Obtenção e processamento de imagens GOES no Backend;
+- Retorno da imagem PNG por uma rota específica (`/goes-image`), registrada no `main.py`;
+- Validação do horário de referência com fuso horário;
+- Exibição da imagem no Frontend, dentro da área de previsão experimental;
+- Funcionalidade validada em ambiente de execução com Docker Compose.
+
+Minha contribuição envolveu tanto o desenvolvimento do serviço de imagens quanto a integração entre Backend e Frontend, adicionando ao projeto uma funcionalidade de visualização de satélite integrada à aplicação.
