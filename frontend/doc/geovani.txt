@@ -1,0 +1,4 @@
+GEOVANI KLOCHE MITER
+
+   - Auxiliou na codificação do front-end junto com Cauã Eiji Ogata,
+     contribuindo com a implementação das funcionalidades do sistema.

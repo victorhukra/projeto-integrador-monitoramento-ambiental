@@ -1,0 +1,7 @@
+ BERNARDO
+
+   - Ficou responsável pelo design do sistema, desenhando o layout
+     inicial que serviu de base para a codificação das telas.
+   - Realizou a maior parte da correção visual da interface, como
+     cores, botões e ajustes de UI (interface do usuário) e UX
+     (experiência do usuário).

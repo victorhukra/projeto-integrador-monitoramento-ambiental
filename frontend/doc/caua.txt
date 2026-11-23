@@ -1,0 +1,10 @@
+CAUÃ EIJI OGATA
+
+   - Foi responsável pela maior parte da codificação do front-end,
+     implementando as telas, os componentes e a comunicação com o
+     banco de dados e com o back-end.
+   - Configurou o container da aplicação em conjunto com o grupo do
+     back-end, permitindo a execução integrada do sistema.
+   - Realizou pesquisas sobre bibliotecas específicas utilizadas no
+     projeto, avaliando quais atendiam melhor às necessidades do
+     sistema.

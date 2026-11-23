@@ -1,0 +1,12 @@
+JOÃO VICTOR CÂNDIDO VITOR
+
+   - Elaborou o escopo inicial do projeto, definindo a divisão de
+     tarefas, as tecnologias e os objetivos da equipe.
+   - Produziu as documentações do projeto, incluindo o relatório de
+     organização, o relatório de progresso e o relatório de evolução
+     do front-end.
+   - Desenvolveu a parte do código referente ao histórico exibido na
+     tela.
+   - Realizou pesquisas sobre bibliotecas específicas utilizadas no
+     projeto, avaliando quais atendiam melhor às necessidades do
+     sistema.
